@@ -5,12 +5,15 @@ Training prodedure is branched from https://github.com/pytorch/examples/tree/mas
 Training:
 ```
 python main.py -a hardnet68 [imagenet-folder with train and val folders]
+
+arch = hardnet39ds | hardnet68ds | hardnet68 | hardnet85
 ```
 
 Evaluating:
 ```
 python main.py -a hardnet68 --pretrained -e [imagenet-folder with train and val folders]
 ```
+for HarDNet85, please download pretrained weights from [here](https://drive.google.com/file/d/1I-qbZtpVlWbRyz1c3lT7rg2IqxCl28at/view?usp=sharing)
 
 ### Hyperparameters
 - epochs 150 ~ 250
