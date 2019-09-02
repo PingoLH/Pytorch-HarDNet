@@ -2,7 +2,7 @@
 ### Harmonic DenseNet: A low memory traffic network (ICCV 2019)
 ### ~ Fully utilize your cuda cores ~
 
-#### Unlike CNN models using a lot of Conv1x1 to reduce model size and number of MACs, HarDNet mainly use Conv3x3 (with only one Conv1x1 layer for each HarDNet block) to increase the computational density 
+#### Unlike CNN models using a lot of Conv1x1 to reduce model size and number of MACs, HarDNet mainly uses Conv3x3 (with only one Conv1x1 layer for each HarDNet block) to increase the computational density.
 #### Increased computational density changes a model from Memory-Bound to Compute-Bound
 <br>
 <p align="center">
