@@ -1,6 +1,6 @@
 ## HarDNet models for ImageNet 
 
-Training prodedure modified from https://github.com/pytorch/examples/tree/master/imagenet
+Training prodedure is branched from https://github.com/pytorch/examples/tree/master/imagenet
 
 Training:
 ```
