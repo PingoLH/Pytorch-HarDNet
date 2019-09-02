@@ -28,3 +28,5 @@ python main.py -a hardnet68 --pretrained -e [imagenet-folder with train and val 
 | **HarDNet68DS** | 4.2  | 0.8  | 74.3 | 
 | **HarDNet68**   | 17.6 | 4.3  | 76.5 | 
 | **HarDNet85**   | 36.7 | 9.1  | 78.0 | 
+
+[Detailed Results](https://github.com/PingoLH/Pytorch-HarDNet/tree/master/imagenet)
