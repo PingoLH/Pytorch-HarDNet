@@ -3,6 +3,12 @@
 #### Please download and follow the instructions in https://github.com/lzx1413/PytorchSSD to setup the environment
 #### This repo provides only HarDNet model files compatible with the above repo
 
+HarDNet68/85: \
+With enhanced feature extraction on high resolution feature maps, the performance on object detection can be better than models designed for image classification which generally concentrate on global feature extraction.
+<p align="center">
+  <img src="../ReadmeImg/breakdown.png" width="512" title="HarDNet Block">
+</p>
+
 ## COCO Pretrained Weights
 Please download COCO pretrained weights from the following links:\
 [SSD-HarDNet68](https://drive.google.com/file/d/1IHXvQMsQbuwYbuxW7HjFQHhGSX6SKz70/view?usp=sharing)\
