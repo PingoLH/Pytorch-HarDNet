@@ -1,10 +1,22 @@
 # Pytorch-HarDNet
-## Harmonic DenseNet: A low memory traffic network (ICCV 2019)
-
+### Harmonic DenseNet: A low memory traffic network (ICCV 2019)
 ### ~ Fully utilize your cuda cores ~
 
+#### Unlike CNN models using a lot of Conv1x1 to reduce model size and number of MACs, HarDNet mainly use Conv3x3 (with only one Conv1x1 layer for each HarDNet block) to increase the computational density 
+#### Increased computational density changes a model from Memory-Bound to Compute-Bound
+<br>
+<p align="center">
+  <img src="ReadmeImg/density.png" width="512" title="Computational Density">
+</p>
 
+#### HarDNet Block:
+- k = groth rate (as in DenseNet)
+- m = channel multiply factor (1.6~1.7)
+<p align="center">
+  <img src="ReadmeImg/hardnet_blk.png" width="640" title="HarDNet Block">
+</p>
 
+## Results
 
 | Method | MParam | GMACs | Inference <br>Time* | ImageNet <br>Top-1 | COCO mAP <br>with SSD512 | 
 | :---: | :---:  | :---:  | :---:  | :---:  | :---:  | 
