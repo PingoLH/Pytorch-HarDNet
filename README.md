@@ -30,6 +30,7 @@
 300 iteraions of random 1024x1024 input images are averaged.
 
 
+## Results of Depthwise Separable (DS) version of HarDNet
 
 | Method | MParam | GMACs | Inference <br>Time** | ImageNet <br>Top-1 | 
 | :---: | :---:  | :---:  | :---:  | :---:  | 
