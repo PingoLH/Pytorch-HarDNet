@@ -11,8 +11,8 @@ With enhanced feature extraction on high resolution feature maps, the performanc
 
 ## COCO Pretrained Weights
 Please download COCO pretrained weights from the following links:\
-[SSD-HarDNet68](https://drive.google.com/file/d/1IHXvQMsQbuwYbuxW7HjFQHhGSX6SKz70/view?usp=sharing)\
-[SSD-HarDNet85](https://drive.google.com/file/d/1gagahaMFOKG6hOGpU0-CgL3m1yc13ktr/view?usp=sharing)
+[SSD-HarDNet68 COCO-pretrained weights](https://drive.google.com/file/d/1IHXvQMsQbuwYbuxW7HjFQHhGSX6SKz70/view?usp=sharing)\
+[SSD-HarDNet85 COCO-pretrained weights](https://drive.google.com/file/d/1gagahaMFOKG6hOGpU0-CgL3m1yc13ktr/view?usp=sharing)
 
 ## Hyperparameters
 - batch size = 32
