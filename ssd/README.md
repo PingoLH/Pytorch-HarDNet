@@ -1,7 +1,7 @@
 # SSD-512 with HarDNet as backbone
 
 #### Please download and follow the instructions in https://github.com/lzx1413/PytorchSSD to setup the environment
-#### This repo provides only HarDNet model files compatible with the above repo
+#### This repo provides only HarDNet model files depending on the above repo
 
 HarDNet68/85: \
 With enhanced feature extraction on high resolution feature maps, the performance on object detection can be better than models designed for image classification which generally concentrate on global feature extraction.
