@@ -40,6 +40,8 @@
 \* Inference time measured on an NVidia 1080ti with pytorch 1.1.0\
 300 iteraions of random 1024x1024 input images are averaged.
 
+###  Refer to [PytorchSSD-HarDNet](https://github.com/PingoLH/PytorchSSD-HarDNet) for training and testing SSD-HarDNet
+
 
 ## Results of Depthwise Separable (DS) version of HarDNet
 
