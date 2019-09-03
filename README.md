@@ -9,11 +9,22 @@
   <img src="ReadmeImg/density.png" width="512" title="Computational Density">
 </p>
 
+## Architecture
 #### HarDNet Block:
 - k = groth rate (as in DenseNet)
 - m = channel multiply factor (1.6~1.7)
+- Conv3x3 for all layers (no bottleneck layer)
+- Conv-BN-ReLU for all layers (istead of BN-ReLU-Conv in DenseNet)
+- No global dense connection (input of a HarDBlk is NOT reused as a part of output)
 <p align="center">
   <img src="ReadmeImg/hardnet_blk.png" width="640" title="HarDNet Block">
+</p>
+
+#### HarDNet68/85:
+- Enhanced local feature extraction to benefit the detection of small objects
+- A transitional Conv1x1 layer is employed after each HarDNet block (HarDBlk)
+<p align="center">
+  <img src="ReadmeImg/hardnet_arch_0.png" width="512" title="HarDNet Block">
 </p>
 
 ## Results
