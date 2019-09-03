@@ -6,7 +6,7 @@
 HarDNet68/85: \
 With enhanced feature extraction on high resolution feature maps, the performance on object detection can be better than models designed for image classification which generally concentrate on global feature extraction.
 <p align="center">
-  <img src="../ReadmeImg/breakdown.png" width="512" title="HarDNet Block">
+  <img src="../ReadmeImg/hardnet_arch_1.png" width="512" title="HarDNet Block">
 </p>
 
 ## COCO Pretrained Weights
