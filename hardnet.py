@@ -201,15 +201,29 @@ class HarDNet(nn.Module):
         print(self.base)
         
         if pretrained:
-          postfix = 'ds' if depth_wise else ''
-          weight_file = '%shardnet%d%s.pth'%(weight_path, arch, postfix)
-          if not os.path.isfile(weight_file):
-            print(weight_file,'cannot be found')
-            exit(0)
-          weights = torch.load(weight_file)
-          self.load_state_dict(weights)
+          if hasattr(torch, 'hub'):
+          
+            if arch == 68 and not depth_wise:
+              checkpoint = 'https://ping-chao.com/hardnet/hardnet68-5d684880.pth'
+            elif arch == 85 and not depth_wise:
+              checkpoint = 'https://ping-chao.com/hardnet/hardnet85-a28faa00.pth'
+            elif arch == 68 and depth_wise:
+              checkpoint = 'https://ping-chao.com/hardnet/hardnet68ds-632474d2.pth'
+            else:
+              checkpoint = 'https://ping-chao.com/hardnet/hardnet39ds-0e6c6fa9.pth'
+
+            self.load_state_dict(torch.hub.load_state_dict_from_url(checkpoint, progress=False))
+          else:
+            postfix = 'ds' if depth_wise else ''
+            weight_file = '%shardnet%d%s.pth'%(weight_path, arch, postfix)            
+            if not os.path.isfile(weight_file):
+              print(weight_file,'is not found')
+              exit(0)
+            weights = torch.load(weight_file)
+            self.load_state_dict(weights)
+          
           postfix = 'DS' if depth_wise else ''
-          print('ImageNet pretrained weights for HarDNet%d%s has been loaded'%(arch, postfix))
+          print('ImageNet pretrained weights for HarDNet%d%s is loaded'%(arch, postfix))
           
     def forward(self, x):
         for layer in self.base:
