@@ -40,7 +40,7 @@ class ConvLayer(nn.Sequential):
         super().__init__()
         out_ch = out_channels
         groups = 1
-        print(kernel, 'x', kernel, 'x', in_channels, 'x', out_channels)
+        #print(kernel, 'x', kernel, 'x', in_channels, 'x', out_channels)
         self.add_module('conv', nn.Conv2d(in_channels, out_ch, kernel_size=kernel,          
                                           stride=stride, padding=kernel//2, groups=groups, bias=bias))
         self.add_module('norm', nn.BatchNorm2d(out_ch))
@@ -89,7 +89,7 @@ class HarDBlock(nn.Module):
           
           if (i % 2 == 0) or (i == n_layers - 1):
             self.out_channels += outch
-        print("Blk out =",self.out_channels)
+        #print("Blk out =",self.out_channels)
         self.layers = nn.ModuleList(layers_)
         
     def forward(self, x):
@@ -198,7 +198,7 @@ class HarDNet(nn.Module):
                 nn.Dropout(drop_rate),
                 nn.Linear(ch, 1000) ))
                 
-        print(self.base)
+        #print(self.base)
         
         if pretrained:
           if hasattr(torch, 'hub'):
