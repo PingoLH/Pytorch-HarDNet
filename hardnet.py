@@ -27,7 +27,7 @@ class DWConvLayer(nn.Sequential):
         
         groups = in_channels
         kernel = 3
-        print(kernel, 'x', kernel, 'x', out_channels, 'x', out_channels, 'DepthWise')
+        #print(kernel, 'x', kernel, 'x', out_channels, 'x', out_channels, 'DepthWise')
         
         self.add_module('dwconv', nn.Conv2d(groups, groups, kernel_size=3,
                                           stride=stride, padding=1, groups=groups, bias=bias))
