@@ -100,8 +100,10 @@ class HarDBlock(nn.Module):
             tin = []
             for i in link:
                 tin.append(layers_[i])
-            
-            x = torch.cat(tin, 1)
+            if len(tin) > 1:            
+                x = torch.cat(tin, 1)
+            else:
+                x = tin[0]
             out = self.layers[layer](x)
             layers_.append(out)
             
