@@ -1,9 +1,10 @@
 # Pytorch-HarDNet
-### [Harmonic DenseNet: A low memory traffic network (ICCV 2019)](https://arxiv.org/abs/1909.00948)
-### ~ Fully utilize your cuda cores ~
-
-#### Unlike CNN models using a lot of Conv1x1 to reduce model size and number of MACs, HarDNet mainly uses Conv3x3 (with only one Conv1x1 layer for each HarDNet block) to increase the computational density.
-#### Increased computational density changes a model from Memory-Bound to Compute-Bound
+### [Harmonic DenseNet: A low memory traffic network (ICCV 2019 paper)](https://arxiv.org/abs/1909.00948)
+### See also [SSD-HarDNet](https://github.com/PingoLH/PytorchSSD-HarDNet) for Object Detection 
+### and [FC-HarDNet](https://github.com/PingoLH/FCHarDNet) for Semantic Segmentation
+* Fully utilize your cuda cores!
+* Unlike CNN models using a lot of Conv1x1 to reduce model size and number of MACs, HarDNet mainly uses Conv3x3 (with only one Conv1x1 layer for each HarDNet block) to increase the computational density.
+* Increased computational density changes a model from Memory-Bound to Compute-Bound
 <br>
 <p align="center">
   <img src="ReadmeImg/density.png" width="512" title="Computational Density">
@@ -39,8 +40,6 @@
 
 \* Inference time measured on an NVidia 1080ti with pytorch 1.1.0\
 300 iteraions of random 1024x1024 input images are averaged.
-
-###  Refer to [PytorchSSD-HarDNet](https://github.com/PingoLH/PytorchSSD-HarDNet) for training and testing SSD-HarDNet
 
 
 ## Results of Depthwise Separable (DS) version of HarDNet
