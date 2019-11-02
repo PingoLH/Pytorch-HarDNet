@@ -7,7 +7,7 @@
 * Increased computational density changes a model from Memory-Bound to Compute-Bound
 <br>
 <p align="center">
-  <img src="ReadmeImg/density.png" width="512" title="Computational Density">
+  <img src="ReadmeImg/imagenet_efficiency.png" width="480" title="Efficiency">
 </p>
 
 ## Architecture
