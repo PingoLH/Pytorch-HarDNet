@@ -12,10 +12,11 @@
 
 ## Architecture
 #### HarDNet Block:
-- k = groth rate (as in DenseNet)
-- m = channel multiplying factor (1.6~1.7)
+- k = growth rate (as in DenseNet)
+- m = channel weighting factor (1.6~1.7)
 - Conv3x3 for all layers (no bottleneck layer)
-- Conv-BN-ReLU for all layers (intead of BN-ReLU-Conv in DenseNet)
+- Conv-BN-ReLU for all layers intead of BN-ReLU-Conv used in DenseNet
+- See [MIPT-Oulu/pytorch_bn_fusion](https://github.com/MIPT-Oulu/pytorch_bn_fusion) to get rid of BatchNorm for inference.
 - No global dense connection (input of a HarDBlk is NOT reused as a part of output)
 <p align="center">
   <img src="ReadmeImg/hardnet_blk.png" width="640" title="HarDNet Block">
