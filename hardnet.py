@@ -170,7 +170,7 @@ class HarDNet(nn.Module):
                        stride=2,  bias=False))
 
         # Second Layer
-        self.base.append(ConvLayer(first_ch[0], first_ch[1],  kernel=second_kernel))
+        self.base.append(ConvLayer(first_ch[0], first_ch[1], kernel=second_kernel))
 
         # Maxpooling or DWConv3x3 downsampling
         if max_pool:
@@ -208,29 +208,31 @@ class HarDNet(nn.Module):
         #print(self.base)
 
         if pretrained:
+            # Represent the architecture with a single string
+            arch_codename = "HarDNet%d" % (arch)
+            if depth_wise:
+                arch_codename += "DS"
+
             if hasattr(torch, 'hub'):
+                checkpoint_urls = {
+                    "HarDNet39_DS": 'https://ping-chao.com/hardnet/hardnet39ds-0e6c6fa9.pth',
+                    "HarDNet68": 'https://ping-chao.com/hardnet/hardnet68-5d684880.pth',
+                    "HarDNet68DS": 'https://ping-chao.com/hardnet/hardnet68ds-632474d2.pth',
+                    "HarDNet85": 'https://ping-chao.com/hardnet/hardnet85-a28faa00.pth',
+                }
 
-                if arch == 68 and not depth_wise:
-                    checkpoint = 'https://ping-chao.com/hardnet/hardnet68-5d684880.pth'
-                elif arch == 85 and not depth_wise:
-                    checkpoint = 'https://ping-chao.com/hardnet/hardnet85-a28faa00.pth'
-                elif arch == 68 and depth_wise:
-                    checkpoint = 'https://ping-chao.com/hardnet/hardnet68ds-632474d2.pth'
-                else:
-                    checkpoint = 'https://ping-chao.com/hardnet/hardnet39ds-0e6c6fa9.pth'
-
+                checkpoint = checkpoint_urls[arch_codename]
                 self.load_state_dict(torch.hub.load_state_dict_from_url(checkpoint, progress=False))
             else:
-                postfix = 'ds' if depth_wise else ''
-                weight_file = '%shardnet%d%s.pth'%(weight_path, arch, postfix)
+                weight_file = '%s%s.pth' % (weight_path, arch_codename.lower())
                 if not os.path.isfile(weight_file):
                     raise FileNotFoundError(
                         errno.ENOENT, os.strerror(errno.ENOENT), weight_file)
+
                 weights = torch.load(weight_file)
                 self.load_state_dict(weights)
 
-            postfix = 'DS' if depth_wise else ''
-            print('ImageNet pretrained weights for HarDNet%d%s is loaded'%(arch, postfix))
+            print('ImageNet pretrained weights for %s is loaded' % arch_codename)
 
     def forward(self, x):
         for layer in self.base:
