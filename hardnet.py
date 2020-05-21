@@ -124,19 +124,20 @@ class HarDNet(nn.Module):
     def __init__(self, depth_wise=False, arch=85, pretrained=True, weight_path=''):
         super().__init__()
 
-        # HarDNet68
-        first_ch = [32, 64]
-        ch_list  = [128, 256, 320, 640, 1024]
-        grmul = 1.7
-        gr       = [ 14,  16,  20,  40,  160]
-        n_layers = [  8,  16,  16,  16,    4]
-        downSamp = [  1,   0,   1,   1,    0]
-        drop_rate = 0.1
-
-        if arch == 85:
+        if arch == 68:
+            # HarDNet68
+            first_ch = [32, 64]
+            ch_list  = [128, 256, 320, 640, 1024]
+            grmul = 1.7
+            gr       = [ 14,  16,  20,  40,  160]
+            n_layers = [  8,  16,  16,  16,    4]
+            downSamp = [  1,   0,   1,   1,    0]
+            drop_rate = 0.1
+        elif arch == 85:
             # HarDNet85
             first_ch = [48, 96]
             ch_list  = [192, 256, 320, 480, 720, 1280]
+            grmul = 1.7
             gr       = [ 24,  24,  28,  36,  48,  256]
             n_layers = [  8,  16,  16,  16,  16,    4]
             downSamp = [  1,   0,   1,   0,   1,    0]
@@ -149,6 +150,8 @@ class HarDNet(nn.Module):
             gr       = [16,  20,  64,  160]
             n_layers = [ 4,  16,   8,    4]
             downSamp = [ 1,   1,   1,    0]
+        else:
+            raise ValueError("Architecture type %s is not supported" % arch)
 
         second_kernel = 3
         max_pool = True
