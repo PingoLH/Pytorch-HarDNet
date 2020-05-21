@@ -1,4 +1,5 @@
 import os
+import errno
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -220,8 +221,8 @@ class HarDNet(nn.Module):
                 postfix = 'ds' if depth_wise else ''
                 weight_file = '%shardnet%d%s.pth'%(weight_path, arch, postfix)
                 if not os.path.isfile(weight_file):
-                    print(weight_file,'is not found')
-                    exit(0)
+                    raise FileNotFoundError(
+                        errno.ENOENT, os.strerror(errno.ENOENT), weight_file)
                 weights = torch.load(weight_file)
                 self.load_state_dict(weights)
 
