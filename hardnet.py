@@ -52,21 +52,21 @@ class ConvLayer(nn.Sequential):
 class HarDBlock(nn.Module):
     def get_link(self, layer, base_ch, growth_rate, grmul):
         if layer == 0:
-          return base_ch, 0, []
+            return base_ch, 0, []
         out_channels = growth_rate
         link = []
         for i in range(10):
-          dv = 2 ** i
-          if layer % dv == 0:
-            k = layer - dv
-            link.append(k)
-            if i > 0:
-                out_channels *= grmul
+            dv = 2 ** i
+            if layer % dv == 0:
+                k = layer - dv
+                link.append(k)
+                if i > 0:
+                    out_channels *= grmul
         out_channels = int(int(out_channels + 1) / 2) * 2
         in_channels = 0
         for i in link:
-          ch,_,_ = self.get_link(i, base_ch, growth_rate, grmul)
-          in_channels += ch
+            ch,_,_ = self.get_link(i, base_ch, growth_rate, grmul)
+            in_channels += ch
         return out_channels, in_channels, link
 
     def get_out_ch(self):
@@ -79,16 +79,16 @@ class HarDBlock(nn.Module):
         layers_ = []
         self.out_channels = 0 # if upsample else in_channels
         for i in range(n_layers):
-          outch, inch, link = self.get_link(i+1, in_channels, growth_rate, grmul)
-          self.links.append(link)
-          use_relu = residual_out
-          if dwconv:
-            layers_.append(CombConvLayer(inch, outch))
-          else:
-            layers_.append(ConvLayer(inch, outch))
+            outch, inch, link = self.get_link(i+1, in_channels, growth_rate, grmul)
+            self.links.append(link)
+            use_relu = residual_out
+            if dwconv:
+                layers_.append(CombConvLayer(inch, outch))
+            else:
+                layers_.append(ConvLayer(inch, outch))
 
-          if (i % 2 == 0) or (i == n_layers - 1):
-            self.out_channels += outch
+            if (i % 2 == 0) or (i == n_layers - 1):
+                self.out_channels += outch
         #print("Blk out =",self.out_channels)
         self.layers = nn.ModuleList(layers_)
 
@@ -110,9 +110,9 @@ class HarDBlock(nn.Module):
         t = len(layers_)
         out_ = []
         for i in range(t):
-          if (i == 0 and self.keepBase) or \
-             (i == t-1) or (i%2 == 1):
-              out_.append(layers_[i])
+            if (i == 0 and self.keepBase) or \
+               (i == t-1) or (i%2 == 1):
+                out_.append(layers_[i])
         out = torch.cat(out_, 1)
         return out
 
@@ -135,26 +135,26 @@ class HarDNet(nn.Module):
         downSamp = [   1,  0,  1,  1,  0]
 
         if arch==85:
-          #HarDNet85
-          first_ch  = [48, 96]
-          ch_list = [  192, 256, 320, 480, 720, 1280]
-          gr       = [  24,  24,  28,  36,  48, 256]
-          n_layers = [   8,  16,  16,  16,  16,   4]
-          downSamp = [   1,   0,   1,   0,   1,   0]
-          drop_rate = 0.2
+            #HarDNet85
+            first_ch  = [48, 96]
+            ch_list = [  192, 256, 320, 480, 720, 1280]
+            gr       = [  24,  24,  28,  36,  48, 256]
+            n_layers = [   8,  16,  16,  16,  16,   4]
+            downSamp = [   1,   0,   1,   0,   1,   0]
+            drop_rate = 0.2
         elif arch==39:
-          #HarDNet39
-          first_ch  = [24, 48]
-          ch_list = [  96, 320, 640, 1024]
-          grmul = 1.6
-          gr       = [  16,  20, 64, 160]
-          n_layers = [   4,  16,  8,   4]
-          downSamp = [   1,   1,  1,   0]
+            #HarDNet39
+            first_ch  = [24, 48]
+            ch_list = [  96, 320, 640, 1024]
+            grmul = 1.6
+            gr       = [  16,  20, 64, 160]
+            n_layers = [   4,  16,  8,   4]
+            downSamp = [   1,   1,  1,   0]
 
         if depth_wise:
-          second_kernel = 1
-          max_pool = False
-          drop_rate = 0.05
+            second_kernel = 1
+            max_pool = False
+            drop_rate = 0.05
 
         blks = len(n_layers)
         self.base = nn.ModuleList([])
@@ -169,9 +169,9 @@ class HarDNet(nn.Module):
 
         # Maxpooling or DWConv3x3 downsampling
         if max_pool:
-          self.base.append(nn.MaxPool2d(kernel_size=3, stride=2, padding=1))
+            self.base.append(nn.MaxPool2d(kernel_size=3, stride=2, padding=1))
         else:
-          self.base.append ( DWConvLayer(first_ch[1], first_ch[1], stride=2) )
+            self.base.append ( DWConvLayer(first_ch[1], first_ch[1], stride=2) )
 
         # Build all HarDNet blocks
         ch = first_ch[1]
@@ -186,10 +186,10 @@ class HarDNet(nn.Module):
             self.base.append ( ConvLayer(ch, ch_list[i], kernel=1) )
             ch = ch_list[i]
             if downSamp[i] == 1:
-              if max_pool:
-                self.base.append(nn.MaxPool2d(kernel_size=2, stride=2))
-              else:
-                self.base.append ( DWConvLayer(ch, ch, stride=2) )
+                if max_pool:
+                    self.base.append(nn.MaxPool2d(kernel_size=2, stride=2))
+                else:
+                    self.base.append ( DWConvLayer(ch, ch, stride=2) )
 
 
         ch = ch_list[blks-1]
@@ -203,31 +203,31 @@ class HarDNet(nn.Module):
         #print(self.base)
 
         if pretrained:
-          if hasattr(torch, 'hub'):
+            if hasattr(torch, 'hub'):
 
-            if arch == 68 and not depth_wise:
-              checkpoint = 'https://ping-chao.com/hardnet/hardnet68-5d684880.pth'
-            elif arch == 85 and not depth_wise:
-              checkpoint = 'https://ping-chao.com/hardnet/hardnet85-a28faa00.pth'
-            elif arch == 68 and depth_wise:
-              checkpoint = 'https://ping-chao.com/hardnet/hardnet68ds-632474d2.pth'
+                if arch == 68 and not depth_wise:
+                    checkpoint = 'https://ping-chao.com/hardnet/hardnet68-5d684880.pth'
+                elif arch == 85 and not depth_wise:
+                    checkpoint = 'https://ping-chao.com/hardnet/hardnet85-a28faa00.pth'
+                elif arch == 68 and depth_wise:
+                    checkpoint = 'https://ping-chao.com/hardnet/hardnet68ds-632474d2.pth'
+                else:
+                    checkpoint = 'https://ping-chao.com/hardnet/hardnet39ds-0e6c6fa9.pth'
+
+                self.load_state_dict(torch.hub.load_state_dict_from_url(checkpoint, progress=False))
             else:
-              checkpoint = 'https://ping-chao.com/hardnet/hardnet39ds-0e6c6fa9.pth'
+                postfix = 'ds' if depth_wise else ''
+                weight_file = '%shardnet%d%s.pth'%(weight_path, arch, postfix)
+                if not os.path.isfile(weight_file):
+                    print(weight_file,'is not found')
+                    exit(0)
+                weights = torch.load(weight_file)
+                self.load_state_dict(weights)
 
-            self.load_state_dict(torch.hub.load_state_dict_from_url(checkpoint, progress=False))
-          else:
-            postfix = 'ds' if depth_wise else ''
-            weight_file = '%shardnet%d%s.pth'%(weight_path, arch, postfix)
-            if not os.path.isfile(weight_file):
-              print(weight_file,'is not found')
-              exit(0)
-            weights = torch.load(weight_file)
-            self.load_state_dict(weights)
-
-          postfix = 'DS' if depth_wise else ''
-          print('ImageNet pretrained weights for HarDNet%d%s is loaded'%(arch, postfix))
+            postfix = 'DS' if depth_wise else ''
+            print('ImageNet pretrained weights for HarDNet%d%s is loaded'%(arch, postfix))
 
     def forward(self, x):
         for layer in self.base:
-          x = layer(x)
+            x = layer(x)
         return x
