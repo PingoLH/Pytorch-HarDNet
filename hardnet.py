@@ -160,40 +160,40 @@ class HarDNet(nn.Module):
         self.base = nn.ModuleList([])
 
         # First Layer: Standard Conv3x3, Stride=2
-        self.base.append (
+        self.base.append(
              ConvLayer(in_channels=3, out_channels=first_ch[0], kernel=3,
-                       stride=2,  bias=False) )
+                       stride=2,  bias=False))
 
         # Second Layer
-        self.base.append ( ConvLayer(first_ch[0], first_ch[1],  kernel=second_kernel) )
+        self.base.append(ConvLayer(first_ch[0], first_ch[1],  kernel=second_kernel))
 
         # Maxpooling or DWConv3x3 downsampling
         if max_pool:
             self.base.append(nn.MaxPool2d(kernel_size=3, stride=2, padding=1))
         else:
-            self.base.append ( DWConvLayer(first_ch[1], first_ch[1], stride=2) )
+            self.base.append(DWConvLayer(first_ch[1], first_ch[1], stride=2))
 
         # Build all HarDNet blocks
         ch = first_ch[1]
         for i in range(blks):
             blk = HarDBlock(ch, gr[i], grmul, n_layers[i], dwconv=depth_wise)
             ch = blk.get_out_ch()
-            self.base.append ( blk )
+            self.base.append(blk)
 
             if i == blks-1 and arch == 85:
-                self.base.append ( nn.Dropout(0.1))
+                self.base.append(nn.Dropout(0.1))
 
-            self.base.append ( ConvLayer(ch, ch_list[i], kernel=1) )
+            self.base.append(ConvLayer(ch, ch_list[i], kernel=1))
             ch = ch_list[i]
             if downSamp[i] == 1:
                 if max_pool:
                     self.base.append(nn.MaxPool2d(kernel_size=2, stride=2))
                 else:
-                    self.base.append ( DWConvLayer(ch, ch, stride=2) )
+                    self.base.append(DWConvLayer(ch, ch, stride=2))
 
 
         ch = ch_list[blks-1]
-        self.base.append (
+        self.base.append(
             nn.Sequential(
                 nn.AdaptiveAvgPool2d((1,1)),
                 Flatten(),
