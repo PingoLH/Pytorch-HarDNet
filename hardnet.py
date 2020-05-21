@@ -3,51 +3,39 @@ import errno
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from collections import OrderedDict
 
 class Flatten(nn.Module):
-    def __init__(self):
-        super().__init__()
     def forward(self, x):
-        return x.view(x.data.size(0),-1)
+        return x.view(x.size(0), -1)
 
 
+def conv_layer(in_channels, out_channels, kernel=3, stride=1, dropout=0.1, bias=False):
+    groups = 1
+    #print(kernel, 'x', kernel, 'x', in_channels, 'x', out_channels)
+    return nn.Sequential(OrderedDict([
+        ('conv', nn.Conv2d(in_channels, out_channels, kernel_size=kernel,
+                           stride=stride, padding=kernel//2, groups=groups, bias=bias)),
+        ('norm', nn.BatchNorm2d(out_channels)),
+        ('relu', nn.ReLU6(inplace=True)),
+    ]))
 
-class CombConvLayer(nn.Sequential):
-    def __init__(self, in_channels, out_channels, kernel=1, stride=1, dropout=0.1, bias=False):
-        super().__init__()
-        self.add_module('layer1',ConvLayer(in_channels, out_channels, kernel))
-        self.add_module('layer2',DWConvLayer(out_channels, out_channels, stride=stride))
 
-    def forward(self, x):
-        return super().forward(x)
+def dw_conv_layer(in_channels, out_channels, stride=1, bias=False):
+    groups = in_channels
 
-class DWConvLayer(nn.Sequential):
-    def __init__(self, in_channels, out_channels,  stride=1,  bias=False):
-        super().__init__()
-        out_ch = out_channels
+    return nn.Sequential(OrderedDict([
+        ('dwconv', nn.Conv2d(groups, groups, kernel_size=3,
+                             stride=stride, padding=1, groups=groups, bias=bias)),
+        ('norm', nn.BatchNorm2d(groups)),
+    ]))
 
-        groups = in_channels
-        kernel = 3
-        #print(kernel, 'x', kernel, 'x', out_channels, 'x', out_channels, 'DepthWise')
 
-        self.add_module('dwconv', nn.Conv2d(groups, groups, kernel_size=3,
-                                          stride=stride, padding=1, groups=groups, bias=bias))
-        self.add_module('norm', nn.BatchNorm2d(groups))
-    def forward(self, x):
-        return super().forward(x)
-
-class ConvLayer(nn.Sequential):
-    def __init__(self, in_channels, out_channels, kernel=3, stride=1, dropout=0.1, bias=False):
-        super().__init__()
-        out_ch = out_channels
-        groups = 1
-        #print(kernel, 'x', kernel, 'x', in_channels, 'x', out_channels)
-        self.add_module('conv', nn.Conv2d(in_channels, out_ch, kernel_size=kernel,
-                                          stride=stride, padding=kernel//2, groups=groups, bias=bias))
-        self.add_module('norm', nn.BatchNorm2d(out_ch))
-        self.add_module('relu', nn.ReLU6(True))
-    def forward(self, x):
-        return super().forward(x)
+def comb_conv_layer(in_channels, out_channels, kernel=1, stride=1, dropout=0.1, bias=False):
+    return nn.Sequential(OrderedDict([
+        ('layer1', conv_layer(in_channels, out_channels, kernel)),
+        ('layer2', dw_conv_layer(out_channels, out_channels, stride=stride))
+    ]))
 
 
 class HarDBlock(nn.Module):
@@ -84,9 +72,9 @@ class HarDBlock(nn.Module):
             self.links.append(link)
             use_relu = residual_out
             if dwconv:
-                layers_.append(CombConvLayer(inch, outch))
+                layers_.append(comb_conv_layer(inch, outch))
             else:
-                layers_.append(ConvLayer(inch, outch))
+                layers_.append(conv_layer(inch, outch))
 
             if (i % 2 == 0) or (i == n_layers - 1):
                 self.out_channels += outch
@@ -166,17 +154,17 @@ class HarDNet(nn.Module):
 
         # First Layer: Standard Conv3x3, Stride=2
         self.base.append(
-             ConvLayer(in_channels=3, out_channels=first_ch[0], kernel=3,
-                       stride=2,  bias=False))
+             conv_layer(in_channels=3, out_channels=first_ch[0], kernel=3,
+                        stride=2,  bias=False))
 
         # Second Layer
-        self.base.append(ConvLayer(first_ch[0], first_ch[1], kernel=second_kernel))
+        self.base.append(conv_layer(first_ch[0], first_ch[1], kernel=second_kernel))
 
         # Maxpooling or DWConv3x3 downsampling
         if max_pool:
             self.base.append(nn.MaxPool2d(kernel_size=3, stride=2, padding=1))
         else:
-            self.base.append(DWConvLayer(first_ch[1], first_ch[1], stride=2))
+            self.base.append(dw_conv_layer(first_ch[1], first_ch[1], stride=2))
 
         # Build all HarDNet blocks
         ch = first_ch[1]
@@ -188,13 +176,13 @@ class HarDNet(nn.Module):
             if i == blks-1 and arch == 85:
                 self.base.append(nn.Dropout(0.1))
 
-            self.base.append(ConvLayer(ch, ch_list[i], kernel=1))
+            self.base.append(conv_layer(ch, ch_list[i], kernel=1))
             ch = ch_list[i]
             if downSamp[i] == 1:
                 if max_pool:
                     self.base.append(nn.MaxPool2d(kernel_size=2, stride=2))
                 else:
-                    self.base.append(DWConvLayer(ch, ch, stride=2))
+                    self.base.append(dw_conv_layer(ch, ch, stride=2))
 
 
         ch = ch_list[blks-1]
