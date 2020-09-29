@@ -1,6 +1,6 @@
 # Pytorch-HarDNet
 ### [Harmonic DenseNet: A low memory traffic network (ICCV 2019 paper)](https://arxiv.org/abs/1909.00948)
-### See also [CenterNet-HarDNet](https://github.com/PingoLH/CenterNet-HarDNet) for Object Detection in 43.6 mAP / 45 fps on COCO dataset
+### See also [CenterNet-HarDNet](https://github.com/PingoLH/CenterNet-HarDNet) for Object Detection in 44.3 mAP / 45 fps on COCO dataset
 ### and [FC-HarDNet](https://github.com/PingoLH/FCHarDNet) for Semantic Segmentation
 * Fully utilize your cuda cores!
 * Unlike CNN models using a lot of Conv1x1 to reduce model size and number of MACs, HarDNet mainly uses Conv3x3 (with only one Conv1x1 layer for each HarDNet block) to increase the computational density.
