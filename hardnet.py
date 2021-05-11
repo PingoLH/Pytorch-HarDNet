@@ -7,9 +7,7 @@ class Flatten(nn.Module):
     def __init__(self):
         super().__init__()
     def forward(self, x):
-        return x.view(x.data.size(0),-1)
-
-
+        return x.flatten(start_dim=1)
 
 class CombConvLayer(nn.Sequential):
     def __init__(self, in_channels, out_channels, kernel=1, stride=1, dropout=0.1, bias=False):
