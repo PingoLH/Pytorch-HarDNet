@@ -3,12 +3,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class Flatten(nn.Module):
-    def __init__(self):
-        super().__init__()
-    def forward(self, x):
-        return x.flatten(start_dim=1)
-
 class CombConvLayer(nn.Sequential):
     def __init__(self, in_channels, out_channels, kernel=1, stride=1, dropout=0.1, bias=False):
         super().__init__()
@@ -194,7 +188,7 @@ class HarDNet(nn.Module):
         self.base.append (
             nn.Sequential(
                 nn.AdaptiveAvgPool2d((1,1)),
-                Flatten(),
+                nn.Flatten(),
                 nn.Dropout(drop_rate),
                 nn.Linear(ch, 1000) ))
                 
